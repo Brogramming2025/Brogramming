@@ -1,4 +1,5 @@
 import re
+import random
 
 def brogramming_to_python(code):
     """
@@ -20,8 +21,22 @@ def brogramming_to_python(code):
             line = re.sub(r'big_ting (.+)', r'print(\1)', line)
         elif line.startswith("sumting_light"):
             line = re.sub(r'sumting_light (\w+) = (.+) plus (.+)', r'\1 = \2 + \3', line)
+        elif line.startswith("minus_dat"):
+            line = re.sub(r'minus_dat (\w+) = (.+) minus (.+)', r'\1 = \2 - \3', line)
+        elif line.startswith("times_dat"):
+            line = re.sub(r'times_dat (\w+) = (.+) times (.+)', r'\1 = \2 * \3', line)
+        elif line.startswith("divide_dat"):
+            line = re.sub(r'divide_dat (\w+) = (.+) divide (.+)', r'\1 = \2 / \3', line)
         elif line.startswith("write_dat"):
             line = re.sub(r'write_dat "(.+)" into (\w+)', r'with open("\2.txt", "w") as f:\n    f.write("\1")', line)
+        elif line.startswith("mandem_list"):
+            line = re.sub(r'mandem_list (\w+)', r'\1 = []', line)
+        elif line.startswith("add_to_mandem"):
+            line = re.sub(r'add_to_mandem (\w+) value (.+)', r'\1.append(\2)', line)
+        elif line.startswith("show_mandem"):
+            line = re.sub(r'show_mandem (\w+)', r'print(\1)', line)
+        elif line.startswith("badman_chance"):
+            line = re.sub(r'badman_chance (\w+) = random between (\d+) and (\d+)', r'\1 = random.randint(\2, \3)', line)
         elif line.startswith("mandem_linkup"):
             line = re.sub(r'mandem_linkup (\w+)\(\):', r'def \1():', line)
             python_code.append("    " * indent_level + line)
@@ -55,19 +70,21 @@ def brogramming_to_python(code):
 
 # Example test
 brogramming_code = """
-chop x = ask_mandem "Wagwan, what’s your name?"
-big_ting "Safe, " + x
+chop num1 = 20
+chop num2 = 5
+sumting_light result1 = num1 plus num2
+minus_dat result2 = num1 minus num2
+times_dat result3 = num1 times num2
+divide_dat result4 = num1 divide num2
+big_ting "Math Results: " + str(result1) + ", " + str(result2) + ", " + str(result3) + ", " + str(result4)
 
-chop num1 = 5
-chop num2 = 10
-sumting_light result = num1 plus num2
-big_ting "Sum is: " + str(result)
+mandem_list squad
+add_to_mandem squad value "Tyrone"
+add_to_mandem squad value "Jake"
+show_mandem squad
 
-chop truthy = real_talk
-chop falsy = cap
-big_ting "Truthy: " + str(truthy) + ", Falsy: " + str(falsy)
-
-write_dat "Hello, Brogramming!" into myfile
+badman_chance lucky_number = random between 1 and 10
+big_ting "Your lucky number is: " + str(lucky_number)
 """
 
 python_code = brogramming_to_python(brogramming_code)
