@@ -1,6 +1,3 @@
-
-#Brogramming 2025
-
 import re
 
 def brogramming_to_python(code):
@@ -15,6 +12,7 @@ def brogramming_to_python(code):
         line = line.strip()
         
         if line.startswith("chop"):
+            line = re.sub(r'chop (\w+) = ask_mandem "(.+)"', r'\1 = input("\2")', line)
             line = re.sub(r'chop (\w+) = (.+)', r'\1 = \2', line)
         elif line.startswith("big_ting"):
             line = re.sub(r'big_ting (.+)', r'print(\1)', line)
@@ -29,8 +27,16 @@ def brogramming_to_python(code):
             indent_level += 1
             continue
         elif line.startswith("spin_da_block"):
-            line = re.sub(r'spin_da_block (.+):', r'while \1:', line)
+            line = re.sub(r'spin_da_block (\w+) in (.+):', r'for \1 in \2:', line)
             python_code.append("    " * indent_level + line)
+            indent_level += 1
+            continue
+        elif line.startswith("safe_mode"):
+            python_code.append("try:")
+            indent_level += 1
+            continue
+        elif line.startswith("catch_case"):
+            python_code.append("except Exception as e:")
             indent_level += 1
             continue
         elif line == "":
@@ -43,11 +49,17 @@ def brogramming_to_python(code):
 
 # Example test
 brogramming_code = """
-chop x = 5
-if_vibes x > 3:
-    big_ting "X is big!"
-mandem_linkup greet():
-    big_ting "Wagwan!"
+chop x = ask_mandem "Wagwan, what’s your name?"
+big_ting "Safe, " + x
+
+chop mandem = ["Jake", "Tyrone", "Kieran"]
+spin_da_block name in mandem:
+    big_ting "Wagwan, " + name
+
+safe_mode:
+    chop y = "5" + 2
+catch_case:
+    big_ting "Bruh, error: " + str(e)
 """
 
 python_code = brogramming_to_python(brogramming_code)
@@ -56,4 +68,3 @@ print(python_code)
 
 # Execute the converted Python code
 exec(python_code)
->>>>>>> 3d44531 (Added user input feature (ask_mandem))
